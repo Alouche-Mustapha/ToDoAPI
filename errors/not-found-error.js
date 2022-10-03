@@ -4,7 +4,7 @@ const CustomError = require("./custom-error");
 class NotFoundError extends CustomError {
   constructor(message) {
     super(message);
-    this.StatusCodes = StatusCodes.NOT_FOUND;
+    this.statusCode = StatusCodes.NOT_FOUND;
   }
 }
 
