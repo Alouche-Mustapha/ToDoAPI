@@ -5,9 +5,11 @@ const {
   getAllUsers,
   getAllTasks,
   getStatistics,
+  deleteUser,
 } = require("../controllers/admin");
 
-router.get("/users", getAllUsers);
+router.route("/users").get(getAllUsers);
+router.route("/users/:id").delete(deleteUser);
 router.get("/tasks", getAllTasks);
 router.get("/statistics", getStatistics);
 

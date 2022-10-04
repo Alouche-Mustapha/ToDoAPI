@@ -1,6 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 
-const { UnauthenticatedError } = require("../errors");
+const { UnauthenticatedError, NotFoundError } = require("../errors");
 const User = require("../models/User");
 const Task = require("../models/Task");
 
@@ -120,4 +120,28 @@ const getStatistics = async (req, res) => {
   res.status(StatusCodes.OK).json({ totalTasks, totalUsers });
 };
 
-module.exports = { getAllUsers, getAllTasks, getStatistics };
+const deleteUser = async (req, res) => {
+  const { id: userId } = req.params;
+  const isAdmin = req.user.isAdmin;
+
+  if (!isAdmin) {
+    throw new UnauthenticatedError(
+      "Not authorized to access this route , only the administrator can"
+    );
+  }
+
+  const user = await User.findOneAndRemove({ _id: userId });
+
+  if (!user) {
+    throw new NotFoundError(`No user with id ${userId}`);
+  }
+
+  const { deletedCount } = await Task.deleteMany({ createdBy: userId });
+
+  res.status(StatusCodes.OK).send({
+    msg: "user successfully deleted and with his tasks",
+    relatedTasksDeleted: deletedCount,
+  });
+};
+
+module.exports = { getAllUsers, getAllTasks, getStatistics, deleteUser };
