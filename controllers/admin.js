@@ -112,6 +112,26 @@ const getAllTasks = async (req, res) => {
   res.status(StatusCodes.OK).json({ count: tasks.length, tasks });
 };
 
+const getUser = async (req, res) => {
+  const isAdmin = req.user.isAdmin;
+
+  if (!isAdmin) {
+    throw new UnauthenticatedError(
+      "Not authorized to access this route , only the administrator can"
+    );
+  }
+
+  const { id: userId } = req.params;
+
+  const user = await User.findOne({ _id: userId }).select("-password -__v");
+
+  if (!user) {
+    throw new NotFoundError(`No user with id ${userId}`);
+  }
+
+  res.status(StatusCodes.OK).json(user);
+};
+
 const getStatistics = async (req, res) => {
   const isAdmin = req.user.isAdmin;
 
@@ -182,7 +202,7 @@ const updateUser = async (req, res) => {
   const user = await User.findOneAndUpdate({ _id: userId }, req.body, {
     new: true,
     runValidators: true,
-  });
+  }).select("-password -__v");
 
   if (!user) {
     throw new NotFoundError(`No user with id ${userId}`);
@@ -194,6 +214,7 @@ const updateUser = async (req, res) => {
 module.exports = {
   getAllUsers,
   getAllTasks,
+  getUser,
   getStatistics,
   deleteUser,
   updateUser,

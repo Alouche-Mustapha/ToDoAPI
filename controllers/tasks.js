@@ -52,7 +52,9 @@ const getTask = async (req, res) => {
     params: { id: taskId },
   } = req;
 
-  const task = await Task.findOne({ _id: taskId, createdBy: userId });
+  const task = await Task.findOne({ _id: taskId, createdBy: userId }).select(
+    "-__v"
+  );
 
   if (!task) {
     throw new NotFoundError(`No task with id ${taskId}`);
