@@ -10,6 +10,7 @@ const authenticatioMiddleware = require("./middlewares/authentication-middleware
 
 const authenticationRouter = require("./routes/authentication");
 const tasksRouter = require("./routes/tasks");
+const refreshTokenRouter = require("./routes/token");
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 
 app.use("/api/v1/authentication", authenticationRouter);
 app.use("/api/v1/tasks", authenticatioMiddleware, tasksRouter);
+app.use("/api/v1/refreshToken", authenticatioMiddleware, refreshTokenRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
