@@ -105,4 +105,19 @@ const getAllTasks = async (req, res) => {
   res.status(StatusCodes.OK).json({ count: tasks.length, tasks });
 };
 
-module.exports = { getAllUsers, getAllTasks };
+const getStatistics = async (req, res) => {
+  const isAdmin = req.user.isAdmin;
+
+  if (!isAdmin) {
+    throw new UnauthenticatedError(
+      "Not authorized to access this route , only the administrator can"
+    );
+  }
+
+  const totalUsers = (await User.find()).length;
+  const totalTasks = (await Task.find()).length;
+
+  res.status(StatusCodes.OK).json({ totalTasks, totalUsers });
+};
+
+module.exports = { getAllUsers, getAllTasks, getStatistics };
