@@ -26,6 +26,11 @@ const getAllTasks = async (req, res) => {
 
   if (fields) {
     const fieldsList = fields.split(",").join(" ");
+    if (fieldsList.includes("createdBy")) {
+      throw new BadRequestError(
+        "createdBy cannot be among the selected fields"
+      );
+    }
     result = result.select(fieldsList);
   } else {
     result = result.select("-createdBy -__v");
