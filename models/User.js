@@ -26,6 +26,10 @@ const UserSchema = new mongoose.Schema({
       "Please provide a valid password",
     ],
   },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 UserSchema.pre("save", async function () {
@@ -40,7 +44,7 @@ UserSchema.methods.comparePassword = async function (candidatePassword) {
 
 UserSchema.methods.createJWT = function () {
   return jwt.sign(
-    { userId: this._id, name: this.name },
+    { userId: this._id, name: this.name, isAdmin: this.isAdmin },
     process.env.JWT_SECRET,
     {
       expiresIn: process.env.JWT_LIFETIME,

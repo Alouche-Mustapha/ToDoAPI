@@ -14,7 +14,11 @@ const authenticationMiddleware = (req, res, next) => {
 
   try {
     const playload = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = { userId: playload.userId, name: playload.name };
+    req.user = {
+      userId: playload.userId,
+      name: playload.name,
+      isAdmin: playload.isAdmin,
+    };
     next();
   } catch (error) {
     throw new UnauthenticatedError("Not authorized to access this route");
