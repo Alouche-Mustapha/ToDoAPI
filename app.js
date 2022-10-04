@@ -20,7 +20,7 @@ app.use(express.json());
 app.use("/api/v1/authentication", authenticationRouter);
 app.use("/api/v1/tasks", authenticatioMiddleware, tasksRouter);
 app.use("/api/v1/refreshToken", authenticatioMiddleware, refreshTokenRouter);
-app.use("/api/v1/admin/users", authenticatioMiddleware, adminRouter);
+app.use("/api/v1/admin", authenticatioMiddleware, adminRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
